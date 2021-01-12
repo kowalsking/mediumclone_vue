@@ -8,7 +8,16 @@ const mutations = {
   }
 }
 
+const actions = {
+  register (context) {
+    setTimeout(() => {
+      context.commit('registerStart')
+    }, 1200)
+  }
+}
+
 export default {
   state,
-  mutations
+  mutations,
+  actions
 }
