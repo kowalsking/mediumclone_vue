@@ -1,18 +1,25 @@
 import authApi from '@/api/auth'
 
 const state = {
-  isSubmitting: false
+  isSubmitting: false,
+  currentUser: null,
+  validationErrors: null,
+  isLoggedIn: null
 }
 
 const mutations = {
   registerStart(state) {
     state.isSubmitting = true
+    state.validationErrors = null
   },
-  registerSuccess(state) {
+  registerSuccess(state, payload) {
     state.isSubmitting = false
+    state.currentUser = payload
+    state.isLoggedIn = true
   },
-  registerFailure(state) {
+  registerFailure(state, payload) {
     state.isSubmitting = false
+    state.validationErrors = payload
   }
 }
 
@@ -23,12 +30,11 @@ const actions = {
       authApi
         .register(credentials)
         .then(response => {
-          console.log(response)
-          context.commit('registerStart', response.data.user)
+          context.commit('registerSuccess', response.data.user)
           resolve(response.data.user)
         })
         .catch(result => {
-          context.commit('registerCommit', result.response.data.errors)
+          context.commit('registerFailure', result.response.data.errors)
           console.log('result errors', result)
         })
     })
